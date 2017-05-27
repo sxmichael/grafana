@@ -15,7 +15,10 @@ import (
 
 func init() {
 	alerting.RegisterCondition("query", func(model *simplejson.Json, index int) (alerting.Condition, error) {
-		return NewQueryCondition(model, index)
+		return NewQueryCondition(model, index, nil)
+	})
+	alerting.RegisterCondition("query-alerting", func(model *simplejson.Json, index int) (alerting.Condition, error) {
+		return NewQueryCondition(model, index, models.AlertStateAlerting)
 	})
 }
 
@@ -26,6 +29,7 @@ type QueryCondition struct {
 	Evaluator     AlertEvaluator
 	Operator      string
 	HandleRequest tsdb.HandleRequestFunc
+	AlertState    AlertStateType
 }
 
 type AlertQuery struct {
@@ -148,10 +152,11 @@ func (c *QueryCondition) getRequestForAlertRule(datasource *m.DataSource, timeRa
 	return req
 }
 
-func NewQueryCondition(model *simplejson.Json, index int) (*QueryCondition, error) {
+func NewQueryCondition(model *simplejson.Json, index int, alertState *AlertStateType) (*QueryCondition, error) {
 	condition := QueryCondition{}
 	condition.Index = index
 	condition.HandleRequest = tsdb.HandleRequest
+	condition.AlertState = alertState
 
 	queryJson := model.Get("query")
 
