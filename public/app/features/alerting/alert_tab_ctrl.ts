@@ -194,9 +194,9 @@ export class AlertTabCtrl {
     }
   }
 
-  buildDefaultCondition() {
+  buildDefaultCondition(conditionType) {
     return {
-      type: 'query',
+      type: conditionType,
       query: {params: ['A', '5m', 'now']},
       reducer: {type: 'avg', params: []},
       evaluator: {type: 'gt', params: [null]},
@@ -214,7 +214,7 @@ export class AlertTabCtrl {
     let foundTarget = null;
 
     for (var condition of this.alert.conditions) {
-      if (condition.type !== 'query') {
+      if (condition.type !== 'query' and condition.type !== 'query-alerting') {
         continue;
       }
 
@@ -303,7 +303,7 @@ export class AlertTabCtrl {
   }
 
   addCondition(type) {
-    var condition = this.buildDefaultCondition();
+    var condition = this.buildDefaultCondition(type);
     // add to persited model
     this.alert.conditions.push(condition);
     // add to view model

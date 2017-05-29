@@ -18,6 +18,7 @@ var alertQueryDef = new QueryPartDef({
 
 var conditionTypes = [
   {text: 'Query', value: 'query'},
+  {text: 'Query When Alerting', value: 'query-alerting'},
 ];
 
 var alertStateSortScore = {
